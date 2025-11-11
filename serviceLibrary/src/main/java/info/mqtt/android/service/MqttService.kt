@@ -579,7 +579,12 @@ class MqttService : Service(), MqttTraceHandler {
     private fun registerBroadcastReceivers() {
         if (networkConnectionMonitor == null) {
             networkConnectionMonitor = NetworkConnectionIntentReceiver()
-            registerReceiver(networkConnectionMonitor, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(networkConnectionMonitor, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), Context.RECEIVER_EXPORTED)
+            } else {
+                registerReceiver(networkConnectionMonitor, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+            }
         }
     }
 
